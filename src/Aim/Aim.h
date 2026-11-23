@@ -8,14 +8,14 @@ Vec3 ObjAim;
 Vec3 AimMovement;  
 float ScreenDistance = 0;
 float WodDistance = 0; 
-char Name[32];//预判数值
+char Name[32]; // Chuỗi giá trị dự đoán chuyển động (Prediction string)
 };
 
 #ifdef AIMBOT_SEPARATED
 
 using namespace std;
 
-extern AimStruct Aim[100]; // 自瞄结构
+extern AimStruct Aim[100]; // Mảng cấu trúc lưu trữ danh sách mục tiêu Aimbot
 extern int AimCount;
 extern float zm_x, zm_y;
 extern int MaxPlayerCount;
@@ -27,84 +27,84 @@ extern float fwjl;
 extern bool DrawIo[50];
 extern float NumIo[50];
 
-// 初始化随机数生成器
+// Khởi tạo bộ sinh số ngẫu nhiên theo thời gian thực
 std::mt19937 generator(static_cast<unsigned int>(time(0)));
-std::uniform_int_distribution<int> distribution_offset(-80, 80); // 定义偏移范围，例如±50像素
+std::uniform_int_distribution<int> distribution_offset(-80, 80); // Phạm vi lệch tọa độ ngẫu nhiên để chống phát hiện (pixel)
 
 
 
 float GetPitch(float Fov) 
 {
-if (Fov > 75 && Fov <= 130)  // 不开镜
+if (Fov > 75 && Fov <= 130)  // Trạng thái bắn tự do không mở ống ngắm (Hipfire)
 {
 return 0.6f * NumIo[14];
 }
-else if (Fov == 70 || Fov == 75)// 机瞄 ，侧瞄
+else if (Fov == 70 || Fov == 75)// Ngắm cơ bản (Iron Sight) hoặc Ống ngắm nghiêng (Canted Sight)
 { 
 return 2.5f * NumIo[14];   
 }
-else if (Fov == 55 || Fov == 60)// 红点 ，全息
+else if (Fov == 55 || Fov == 60)// Ống ngắm chấm đỏ (Red Dot) hoặc Holographic
 {
 return 2.5f * NumIo[14];
 }   
-else if ((int)Fov == 44)// 2倍
+else if ((int)Fov == 44)// Ống ngắm phóng đại 2x
 {
 return 5.1f * NumIo[14];
 }
-else if ((int)Fov == 26)// 3倍
+else if ((int)Fov == 26)// Ống ngắm phóng đại 3x
 {
 return 7.1f * NumIo[14];
 }
-else if ((int)Fov == 20)// 4倍
+else if ((int)Fov == 20)// Ống ngắm phóng đại 4x
 {
 return 8.4f * NumIo[14];
 }
-else if ((int)Fov == 13)// 6倍
+else if ((int)Fov == 13)// Ống ngắm phóng đại 6x
 {   
 return 13.9f * NumIo[14];
 }
-return 2.5f * NumIo[14];   // 8倍
+return 2.5f * NumIo[14];   // Ống ngắm phóng đại 8x
 }
 
 float GetWeaponId(int WeaponId) {
     switch (WeaponId) {
-        // 自动武器 - 突击步枪
-        case 101008: return 1.1;  // M762
+        // Nhóm súng trường tấn công tự động (Assault Rifles - AR)
+        case 101008: return 1.1;  // M762 Beryl
         case 101001: return 1.2;  // AKM
         case 101004: return 0.85; // M416
         case 101003: return 0.8;  // SCAR-L
         case 101002: return 0.8;  // M16A4
-        case 101009: return 1.05; // Mk47
-        case 101006: return 0.75; // AUG
+        case 101009: return 1.05; // Mk47 Mutant
+        case 101006: return 0.75; // AUG A3
         case 101005: return 1.05; // Groza
         case 101010: return 1.0;  // G36C
         case 101007: return 0.95; // QBZ
-        case 101011: return 0.9;  // AC-VAL
-        case 101012: return 1.0;  // 蜜獾突击步枪
+        case 101011: return 0.9;  // AS-VAL
+        case 101012: return 1.0;  // Honey Badger
         
-        // 自动武器 - 机关枪
-        case 105001: return 1.25; // M249
+        // Nhóm súng máy hạng nhẹ (Light Machine Guns - LMG)
+        case 105001: return 1.25; // M249 SAW
         case 105002: return 1.23; // DP-28
         case 105010: return 1.0;  // MG3
         
-        // 自动武器 - 冲锋枪
-        case 102001: return 0.6;  // UZI
-        case 102003: return 0.6;  // Vector
-        case 100103: return 0.65; // PP-19
+        // Nhóm súng tiểu liên (Submachine Guns - SMG)
+        case 102001: return 0.6;  // Micro UZI
+        case 102003: return 0.6;  // KRISS Vector
+        case 100103: return 0.65; // PP-19 Bizon
         case 102007: return 0.6;  // MP5K
-        case 102002: return 0.6;  // UMP 5
-        case 102004: return 0.6;  // 汤姆逊
-        case 102105: return 0.5;  // P90
-        case 102005: return 0.6;  // 野牛
+        case 102002: return 0.6;  // UMP45
+        case 102004: return 0.6;  // Tommy Gun (Thompson)
+        case 102105: return 0.5;  // FN P90
+        case 102005: return 0.6;  // PP-19 Bizon
         
-        case 103001: return 0;    // 98k
-        case 103004: return 0;    // sks
-        case 103005: return 0.35; // vss
-        case 103012: return 0;    // amr
-        case 103015: return 0;    // m200
+        // Nhóm súng bắn tỉa / xạ thủ (Sniper & DMR)
+        case 103001: return 0;    // Kar98k
+        case 103004: return 0;    // SKS
+        case 103005: return 0.35; // VSS Vintorez
+        case 103012: return 0;    // AMR
+        case 103015: return 0;    // M200 CheyTac
 
-
-        default: return 0.95;     // 未收录
+        default: return 0.95;     // Vũ khí mặc định chưa liệt kê
     }
 }
 
@@ -207,7 +207,7 @@ void AimBotAuto() {
     int random_offset_x = distribution_offset(generator);
     int random_offset_y = distribution_offset(generator);
 
-    // 应用随机偏移量
+    // Áp dụng độ lệch ngẫu nhiên (chống phát hiện)
     int final_x = NumIo[5] + random_offset_x;
     int final_y = NumIo[6] + random_offset_y;
 
@@ -254,7 +254,7 @@ void AimBotAuto() {
                 int random_offset_x = distribution_offset(generator);
                 int random_offset_y = distribution_offset(generator);
 
-                // 应用随机偏移量
+                // Áp dụng độ lệch ngẫu nhiên (chống phát hiện)
                 int final_x = NumIo[5] + random_offset_x;
                 int final_y = NumIo[6] + random_offset_y;
 
@@ -275,7 +275,7 @@ void AimBotAuto() {
                 int random_offset_x = distribution_offset(generator);
                 int random_offset_y = distribution_offset(generator);
 
-                // 应用随机偏移量
+                // Áp dụng độ lệch ngẫu nhiên (chống phát hiện)
                 int final_x = NumIo[5] + random_offset_x;
                 int final_y = NumIo[6] + random_offset_y;
 
@@ -326,7 +326,7 @@ void AimBotAuto() {
                 int random_offset_x = distribution_offset(generator);
                 int random_offset_y = distribution_offset(generator);
 
-                // 应用随机偏移量
+                // Áp dụng độ lệch ngẫu nhiên (chống phát hiện)
                 int final_x = NumIo[5] + random_offset_x;
                 int final_y = NumIo[6] + random_offset_y;
 
@@ -348,7 +348,7 @@ void AimBotAuto() {
                             int random_offset_x = distribution_offset(generator);
                             int random_offset_y = distribution_offset(generator);
 
-                            // 应用随机偏移量
+                            // Áp dụng độ lệch ngẫu nhiên (chống phát hiện)
                             int final_x = NumIo[5] + random_offset_x;
                             int final_y = NumIo[6] + random_offset_y;
 
@@ -368,7 +368,7 @@ void AimBotAuto() {
                             int random_offset_x = distribution_offset(generator);
                             int random_offset_y = distribution_offset(generator);
 
-                            // 应用随机偏移量
+                            // Áp dụng độ lệch ngẫu nhiên (chống phát hiện)
                             int final_x = NumIo[5] + random_offset_x;
                             int final_y = NumIo[6] + random_offset_y;
 
@@ -388,7 +388,7 @@ void AimBotAuto() {
                             int random_offset_x = distribution_offset(generator);
                             int random_offset_y = distribution_offset(generator);
 
-                            // 应用随机偏移量
+                            // Áp dụng độ lệch ngẫu nhiên (chống phát hiện)
                             int final_x = NumIo[5] + random_offset_x;
                             int final_y = NumIo[6] + random_offset_y;
 
@@ -448,7 +448,7 @@ void AimBotAuto() {
                     int random_offset_x = distribution_offset(generator);
                     int random_offset_y = distribution_offset(generator);
 
-                    // 应用随机偏移量
+                    // Áp dụng độ lệch ngẫu nhiên (chống phát hiện)
                     int final_x = NumIo[5] + random_offset_x;
                     int final_y = NumIo[6] + random_offset_y;
 
@@ -465,11 +465,11 @@ void AimBotAuto() {
 
             if (tx >= NumIo[5] + NumIo[7] || tx <= NumIo[5] - NumIo[7] || ty >= NumIo[6] + NumIo[7] || ty <= NumIo[6] - NumIo[7]) {
                 usleep(1000);
-                // 只要滑屏达到了边界，直接还原至中心
+                // Khi thao tác vuốt chạm chạm biên màn hình, tự động trả về vị trí tâm
                 int random_offset_x = distribution_offset(generator);
                 int random_offset_y = distribution_offset(generator);
 
-                // 应用随机偏移量
+                // Áp dụng độ lệch ngẫu nhiên (chống phát hiện)
                 int final_x = NumIo[5] + random_offset_x;
                 int final_y = NumIo[6] + random_offset_y;
 
@@ -501,7 +501,7 @@ void AimBotAuto() {
                 int random_offset_x = distribution_offset(generator);
                 int random_offset_y = distribution_offset(generator);
 
-                // 应用随机偏移量
+                // Áp dụng độ lệch ngẫu nhiên (chống phát hiện)
                 int final_x = NumIo[5] + random_offset_x;
                 int final_y = NumIo[6] + random_offset_y;
 

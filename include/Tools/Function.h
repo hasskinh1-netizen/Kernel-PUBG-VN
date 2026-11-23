@@ -72,9 +72,9 @@ Vec3 Scale3D;
 };
 
 struct BoneStruct {
-Vec3 Pos; // 世界坐标 
-Vec2 ScreenPos; // 屏幕坐标
-bool CanSee; // 可见判断
+Vec3 Pos; // Tọa độ thế giới thực (World Position: X, Y, Z)
+Vec2 ScreenPos; // Tọa độ chiếu trên màn hình 2D (Screen Position: X, Y)
+bool CanSee; // Cờ kiểm tra tầm nhìn / che chắn (Visibility flag)
 };
 
 
@@ -82,11 +82,11 @@ bool CanSee; // 可见判断
 
 
 
-// 计算骨骼
+// Trích xuất vector vị trí tịnh tiến từ ma trận biến đổi FMatrix
 inline Vec3 MarixToVector(FMatrix matrix) {
 return Vec3(matrix.M[3][0], matrix.M[3][1], matrix.M[3][2]);
 }
-// 计算骨骼
+// Nhân hai ma trận 4x4 (Matrix multiplication) trong không gian UE4
 inline FMatrix MatrixMulti(FMatrix m1, FMatrix m2) {
 FMatrix matrix = FMatrix();
 for (int i = 0; i < 4; i++) {
@@ -98,7 +98,7 @@ matrix.M[i][j] += m1.M[i][k] * m2.M[k][j];
 }
 return matrix;
 }
-// 计算骨骼
+// Chuyển đổi cấu trúc FTransform (Quat + Translation + Scale) thành ma trận FMatrix 4x4
 inline FMatrix TransformToMatrix(FTransform transform) {
 FMatrix matrix;
 matrix.M[3][0] = transform.Translation.x;

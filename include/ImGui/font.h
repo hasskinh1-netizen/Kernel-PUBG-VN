@@ -1,5 +1,5 @@
-// 2024 / 4.11 编译 by 土豆雷
-// 转换日期: 2025-07-18 Fri 23:53:08
+// Biên dịch font ImGui tùy chỉnh
+// Ngày chuyển đổi dữ liệu: 2025-07-18 Fri 23:53:08
 static const unsigned int font_size = 908696;
 static const unsigned int font_data[908696/4] =
 {

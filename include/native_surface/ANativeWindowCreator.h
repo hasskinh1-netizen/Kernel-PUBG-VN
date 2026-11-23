@@ -523,14 +523,14 @@ public:
     {
         auto &surfaceComposerClient = GetComposerInstance();
 
-        // 获取屏幕尺寸
+        // Lấy kích thước độ phân giải màn hình hiển thị
         if (width == -1 || height == -1) {
             auto displayInfo = GetDisplayInfo();
             width = displayInfo.width;
             height = displayInfo.height;
         }
 
-        // 创建Surface
+        // Tạo phần cứng Native Surface từ SurfaceFlinger
         auto surfaceControl = surfaceComposerClient.CreateSurface(name, width, height, secure);
         auto nativeWindow = reinterpret_cast<ANativeWindow *>(surfaceControl.GetSurface());
 

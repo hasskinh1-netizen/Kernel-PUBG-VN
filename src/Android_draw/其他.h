@@ -84,7 +84,7 @@ float ReadFloat(long addr) {
 	return he;
 }
 
-// 绘制骨骼函数
+// Hàm vẽ đường nối khung xương người chơi (Bone skeleton line)
 void DrawBone(ImVec2 start, ImVec2 end) {
 if (!isnan(start.x) && !isnan(start.y) && !isnan(end.x) && !isnan(end.x)) {
 double dx = start.x - end.x;

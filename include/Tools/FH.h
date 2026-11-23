@@ -19,23 +19,23 @@
 
 #define MAX_PAYLOAD 1048
 
-// dit 3.3
+// Chuẩn giao tiếp Netlink driver (dit 3.3)
 struct Memory_uct {
-    int read_write; // 读或者写
-    int pid;
-    uintptr_t addr;
-    void *buffer;
-    size_t size;
+    int read_write; // Cờ thao tác: 0 = Đọc, 1 = Ghi bộ nhớ
+    int pid;        // Process ID của tiến trình game
+    uintptr_t addr; // Địa chỉ vùng nhớ đích cần truy cập
+    void *buffer;   // Bộ đệm chứa dữ liệu đọc ra / ghi vào
+    size_t size;    // Kích thước vùng nhớ cần đọc (bytes)
 };
 
-// dit pro 3.3
+// Chuẩn giao tiếp Syscall Hook driver (dit pro 3.3)
 struct Ditpro_uct {
-    int read_write; // 读或者写
-    int pid;
-    uintptr_t addr;
-    void *buffer;
-    size_t size;
-    int wendi; // 这个是判断只进行属于我们的操作,616
+    int read_write; // Cờ thao tác: 0 = Đọc, 1 = Ghi bộ nhớ
+    int pid;        // Process ID của tiến trình game
+    uintptr_t addr; // Địa chỉ vùng nhớ đích cần truy cập
+    void *buffer;   // Bộ đệm chứa dữ liệu đọc ra / ghi vào
+    size_t size;    // Kích thước vùng nhớ cần đọc (bytes)
+    int wendi;      // Mã Magic định danh gói tin hợp lệ (616)
 };
 
 class c_driver {

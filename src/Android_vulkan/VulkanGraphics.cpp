@@ -60,7 +60,7 @@ bool VulkanGraphics::Create(ANativeWindow *Window, int m_Width, int m_Height) {
 
     wd = std::make_unique<ImGui_ImplVulkanH_Window>();
 
-    //为imgui加载vulkan函数
+    // Tải động các con trỏ hàm Vulkan cần thiết cho ImGui backend
     void *libvulkan = dlopen("libvulkan.so", RTLD_NOW);
     ImGui_ImplVulkan_LoadFunctions([](const char *function_name, void *handle) -> PFN_vkVoidFunction {
         return reinterpret_cast<PFN_vkVoidFunction>(dlsym(handle, function_name));
@@ -279,7 +279,7 @@ void VulkanGraphics::PrepareFrame(bool resize) {
         }
         if (width > 0 && height > 0) {
             if (width != m_LastWidth || height != m_LastHeight) {
-                //切屏休息半秒
+                // Tạm nghỉ 0.5s để hệ thống ổn định khi xoay màn hình
                 usleep(500000);
                 m_LastWidth = width;
                 m_LastHeight = height;
@@ -326,7 +326,7 @@ void VulkanGraphics::Render(ImDrawData *drawData) {
         check_vk_result(err);
     }
     {
-        //透明 默认已经是0了
+        // Trong suốt: giá trị màu xóa nền (Clear Value) mặc định là 0 (hoàn toàn trong suốt)
         //memset(wd->ClearValue.color.float32, 0, sizeof(wd->ClearValue.color.float32));
         VkRenderPassBeginInfo info = {};
         info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
@@ -628,16 +628,16 @@ ImTextureID VulkanGraphics::ImAgeHeadFile(const unsigned char *buf, int len) {
     //unsigned char *image_data = loadFunc(&tex_data);
     unsigned char *image_data = stbi_load_from_memory((const stbi_uc *) buf, len, &tex_data.Width, &tex_data.Height, nullptr, tex_data.Channels);
     if (image_data == nullptr)
-        return (ImTextureID)0; // 确保返回正确的空值表示。
+        return (ImTextureID)0; // Đảm bảo trả về con trỏ texture rỗng nếu load ảnh thất bại
 
-    // 假设 LoadTexture 返回一个指向 VulkanTextureData 的指针。
+    // Nạp texture vào bộ nhớ Vulkan và lấy cấu trúc VulkanTextureData
     auto *result = LoadTexture(&tex_data, image_data);
     if (result == nullptr)
-        return (ImTextureID)0; // 如果 LoadTexture 失败，返回正确的空值表示。
+        return (ImTextureID)0; // Nếu tạo texture thất bại, trả về con trỏ rỗng
 
-    stbi_image_free(image_data); // 释放图像数据
+    stbi_image_free(image_data); // Giải phóng dữ liệu ảnh thô trong RAM sau khi đã upload lên GPU
 
-    return (ImTextureID)result->DS; // 假设 DS 是一个可以转换为 ImTextureID 的类型。
+    return (ImTextureID)result->DS; // Descriptor Set của Vulkan texture được ép kiểu sang ImTextureID cho ImGui
 }
  
 

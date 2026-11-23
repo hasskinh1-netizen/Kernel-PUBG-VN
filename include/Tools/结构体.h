@@ -65,9 +65,9 @@ char Name[128];
 extern Data fanhua;
 extern WuziData wz;
 struct AimAlarm {
-    float 距离;      // 距离
-    std::string Name;    // 名字
-    std::string 手持武器;  // 武器类型
+    float 距离;          // Khoảng cách tới mục tiêu (Distance)
+    std::string Name;    // Tên kẻ địch (Player name)
+    std::string 手持武器; // Loại vũ khí đang cầm trên tay (Weapon held)
 };
   
 #endif

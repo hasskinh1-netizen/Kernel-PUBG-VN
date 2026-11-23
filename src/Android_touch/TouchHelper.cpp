@@ -46,7 +46,7 @@ struct eventinfo {
 	struct input_absinfo data;
 };
 
-//触控设备数据结构
+// Cấu trúc dữ liệu quản lý thiết bị cảm ứng
 struct events {
 	int ID;
 	bool io = false;
@@ -55,7 +55,7 @@ struct events {
 };
 
 float x_proportion, y_proportion;
-int ScreenType = 0; // 竖屏 横屏
+int ScreenType = 0; // Hướng màn hình: 0 = Màn hình dọc, 1 = Màn hình ngang
 TouchFinger Fingers[10]; 
 events eventdata[EV_MAX + 1];
 
@@ -143,7 +143,7 @@ bool windowHasFoused = false;
 void Upload(int slot) {
     if (dev_fd <= 0) {
 		bLock = false;
-		return; // 都没抢夺触摸屏上传你妈逼
+		return; // Chưa chiếm quyền thiết bị cảm ứng, bỏ qua gửi sự kiện
 	}
     
     auto& Finger = Fingers[slot];
@@ -163,10 +163,10 @@ void Upload(int slot) {
 	bLock = true;
 	
     struct input_event event[16];
-    // 开始上传数据
+    // Bắt đầu đóng gói và gửi dữ liệu sự kiện cảm ứng
 	
     int32_t tmpCnt = 0;
-    // 重置事件
+    // Đặt lại bộ đếm sự kiện
     
     if (Finger.status != FINGER_UP) {
     	if (!touch_status)
@@ -402,7 +402,7 @@ void HandleTouchEvent() {
     			}			
     		} else {
                 for (std::set<int>::iterator i=UpdatePointers.begin();i!=UpdatePointers.end();i++) {
-                     Upload(*i); //注意指针运算符
+                     Upload(*i); // Gửi sự kiện cho từng slot ngón tay được cập nhật
                 }
     		    break;	
     		}
@@ -427,21 +427,21 @@ bool GrabTouchScreen() {
 	} else {
 		printf("[+] Touch device initialized successfully\n");
 		
-		// 创建驱动	
+		// Khởi tạo thiết bị cảm ứng ảo qua kernel uinput	
 		static int uinp_fd;
 		struct uinput_user_dev uinp;
 		struct input_event event;
 		
 		uinp_fd = open("/dev/uinput", O_WRONLY|O_NONBLOCK);
 		
-		if (uinp_fd == 0) { // 打开uinput
-			//printf("无法打开 /dev/uinput 请检查是否有root权限\n");
+		if (uinp_fd == 0) { // Không thể mở uinput
+			//printf("Không thể mở /dev/uinput, vui lòng kiểm tra quyền root\n");
 			return false;
 		}
 		
 		dev_fd = uinp_fd; 
 				
-		// configure touch device event properties
+		// Cấu hình thuộc tính sự kiện của thiết bị cảm ứng
 		memset(&uinp, 0, sizeof(uinp));
 
         char name[16];
@@ -460,7 +460,7 @@ bool GrabTouchScreen() {
         uinp.absmin[ABS_MT_SLOT] = 0;
 		uinp.absmax[ABS_MT_SLOT] = 9;
 		uinp.absmin[ABS_MT_TRACKING_ID] = 0;
-		uinp.absmax[ABS_MT_TRACKING_ID] = 65535;//按键码ID累计叠加最大值
+		uinp.absmax[ABS_MT_TRACKING_ID] = 65535; // Giá trị tracking ID tối đa của hệ thống đa điểm
 
         uinp.absmin[ABS_MT_POSITION_X] = 0;
         uinp.absmax[ABS_MT_POSITION_X] = absX.maximum;
@@ -478,7 +478,7 @@ bool GrabTouchScreen() {
     
         ioctl(uinp_fd, UI_SET_EVBIT, EV_SYN);
     
-        //随机注册
+        // Đăng ký ngẫu nhiên các trục sự kiện phụ để giả lập đặc tính thiết bị thật
         for (int ii = 0; ii < 41; ii++) {
             int i = rand() % 41;
             if (i == 0) { ioctl(uinp_fd, UI_SET_ABSBIT, ABS_X); }

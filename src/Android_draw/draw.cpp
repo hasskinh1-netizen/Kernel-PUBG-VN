@@ -50,21 +50,21 @@ ImGuiIO& io = ImGui::GetIO();
 io.IniFilename = NULL;
  
 ImGui_ImplAndroid_Init(native_window);
-VK.Setup();  //初始化vk数据
+VK.Setup();  // Khởi tạo tài nguyên Vulkan (Command buffers, Pipelines)
 io.Fonts->AddFontFromMemoryTTF((void *) font_data, font_size, 35.0f, NULL, io.Fonts->GetGlyphRangesChineseFull());
 }
 
 
 void VK_Begin() {
 screen_config();
-ImGui_ImplVulkan_NewFrame(); //开始新的vk帧
+ImGui_ImplVulkan_NewFrame(); // Bắt đầu khung hình Vulkan mới cho ImGui
 ImGui_ImplAndroid_NewFrame(screen_x, screen_y);
 ImGui::NewFrame();
 }
 
 void VK_End() {
 ImGui::Render();
-VK.Render(ImGui::GetDrawData());  //使用vk进行渲染
+VK.Render(ImGui::GetDrawData());  // Tiến hành render dữ liệu vẽ của ImGui bằng Vulkan pipeline
 }
 
 

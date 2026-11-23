@@ -10,30 +10,30 @@ void HandleTouchEvent();
 bool GrabTouchScreen();
 
 enum FingerStatus {
-    FINGER_NO, // 无状态
-    FINGER_X_UPDATE, // X更新
-    FINGER_Y_UPDATE, // Y更新
-    FINGER_XY_UPDATE, // XY同时更新
-    FINGER_UP // 抬起
+    FINGER_NO,        // Trạng thái rảnh (không chạm)
+    FINGER_X_UPDATE,  // Cập nhật tọa độ trục X
+    FINGER_Y_UPDATE,  // Cập nhật tọa độ trục Y
+    FINGER_XY_UPDATE, // Cập nhật đồng thời cả hai trục X và Y
+    FINGER_UP         // Nhấc ngón tay lên (kết thúc chạm)
 };
 
 struct TouchFinger {
-    int x = -1, y = -1; // 触摸点XY数据
-    int tracking_id = -1; // 触摸点追踪ID数据
+    int x = -1, y = -1;       // Tọa độ điểm chạm (X, Y)
+    int tracking_id = -1;     // ID theo dõi điểm chạm đa điểm của kernel
     int status = FINGER_NO;
     timeval time;
-};// 10根手指
+}; // Hỗ trợ tối đa 10 điểm chạm đa điểm
 
-void Touch_Down(int slot,int x,int y); // 按下
+void Touch_Down(int slot,int x,int y); // Thao tác nhấn chạm xuống màn hình
 
-void Touch_Move(int slot,int x,int y); // 移动 等价于 Touch_Down
+void Touch_Move(int slot,int x,int y); // Thao tác di chuyển ngón tay (tương đương Touch_Down)
 
-void Touch_Up(int slot); // 抬起
+void Touch_Up(int slot); // Thao tác nhấc ngón tay khỏi màn hình
 
 TouchFinger* getTouchFinger(int slot);
 
 void setTouchCallback(void (*_callback)(TouchFinger*));
 
-void TouchScreenHandle(); // 监听
+void TouchScreenHandle(); // Luồng lắng nghe và xử lý sự kiện cảm ứng màn hình
 	
 #endif

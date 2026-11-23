@@ -66,12 +66,12 @@ struct timer {
 		memset(&now,0, sizeof(vsync));
 	}
 	
-	//计时器开始
+	// Bắt đầu đo thời gian (Timer start)
 	inline void start(){
 		clock_gettime(CLOCK_MONOTONIC,&str);
 	}
 	
-	//计时器结束
+	// Dừng đo thời gian và trả về mili-giây (Timer stop)
 	inline float stop(bool show){
 		clock_gettime(CLOCK_MONOTONIC,&end);
 		runtime = (((1000000000*end.tv_sec)+(end.tv_nsec))-((1000000000*str.tv_sec)+(str.tv_nsec)));
@@ -80,7 +80,7 @@ struct timer {
 		return runtime/1000000.0f;
 	}
 	
-	// 使用 AotuFPS 之前 需调用 SetFps ，参数 单位 每秒循环次数
+	// Thiết lập giới hạn khung hình mục tiêu (FPS). Tham số: số vòng lặp mỗi giây
 	inline void SetFps(unsigned int fps){
 		Fps = 1000000000/fps;
 	}
@@ -89,7 +89,7 @@ struct timer {
 		fpsio = false;
 	}
 	
-	//初始化 AotuFPS ， 必须在 AotuFPS 之前调用
+	// Khởi tạo điều tốc AotuFPS, bắt buộc gọi trước khi bắt đầu vòng lặp render
 	inline void AotuFPS_init()
 	{
 		clock_gettime(CLOCK_MONOTONIC,&old);
@@ -98,7 +98,7 @@ struct timer {
 	}
 	
 	long long oldtimer;
-	//调用 AotuFPS 之前 请调用 AotuFPS_init  和 SetFps， SetFps 可实时调整FPS。此函数建议放在循环最前面。函数返回值为当前循环时间，单位毫秒， 1000.0f/返回值可得到准确fps
+	// Hàm khóa FPS tự động cho từng frame. Gọi ở đầu mỗi vòng lặp render. Giá trị trả về: thời gian vòng lặp (ms)
 	inline float AotuFPS()
 	{
 		clock_gettime(CLOCK_MONOTONIC,&now);
@@ -114,7 +114,7 @@ struct timer {
 		return (old_time+SleepTime)/1000000.0f;
 	}
 
-	//定时器单位毫秒，到达定时时间返回true，并且再次进入定时
+	// Bộ đếm thời gian định kỳ (ms). Khi đạt ngưỡng thời gian trả về true và tự động reset chu kỳ mới
 	inline bool cktime(unsigned int ms)
 	{
 		if ( !lodtime ){
@@ -149,7 +149,7 @@ struct timer {
 		return looptime;
 	}
 
-	//setAffinity 辅助函数
+	// Hàm bổ trợ lấy số nhân CPU của thiết bị
 	int32_t getNumCpus()
 	{
 		static int32_t sNumCpus = []() {
@@ -166,7 +166,7 @@ struct timer {
 		return sNumCpus;
 	}
 	
-	//设置CPU亲和，平稳循环时间 , 需要在循环同线程调用。
+	// Thiết lập CPU Affinity giúp ổn định chu kỳ xung nhịp và hạn chế giật lag khung hình
 	void setAffinity()
 	{
 		const int32_t numCpus = getNumCpus();
@@ -178,7 +178,7 @@ struct timer {
 		sched_setaffinity(gettid(), sizeof(cpuSet), &cpuSet);
 	}
 	
-	//高精度sleep,单位纳秒
+	// Hàm ngủ có độ chính xác cao theo nano-giây (High-precision nanosecond sleep)
 	inline void nsleep(long delay)
 	{
 		struct timespec req, rem;
