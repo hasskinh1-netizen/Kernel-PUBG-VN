@@ -422,10 +422,10 @@ bool GrabTouchScreen() {
 	if (ioctl(fb, 0x40044590uLL, 1))
 	{
 		char *v1 = strerror(*__errno());
-		printf("创建触摸屏失败 %s.\n", v1);
+		printf("[-] Failed to grab touch screen: %s\n", v1);
 		return false;
 	} else {
-		printf("触摸驱动生成 成功");
+		printf("[+] Touch device initialized successfully\n");
 		
 		// 创建驱动	
 		static int uinp_fd;

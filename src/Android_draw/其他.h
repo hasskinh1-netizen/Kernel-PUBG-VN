@@ -105,7 +105,7 @@ fanhua.pid = driver->GetPid("com.tencent.tmgp.pubgmhd");
 if (fanhua.pid > 0 && fanhua.pid < 100000)
 driver->initialize(fanhua.pid);
 else {
-printf("\n和平精英未启动\n");
+printf("\n[-] Game process not running\n");
 return 0;
 }
 fanhua.libUE4 = driver->getModuleBase("libUE4.so");

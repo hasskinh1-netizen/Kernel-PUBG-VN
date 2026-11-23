@@ -83,7 +83,7 @@ init_android_version();
     } else if (pid == 0) {
     
     } else {
-        fprintf(stderr, "[+]无后台模式开启失败\n");
+        fprintf(stderr, "[-] Background mode activation failed\n");
         exit(1);
     }
 }
@@ -98,13 +98,13 @@ if (!init_vulkan(init_screen_x, init_screen_y, antiRecording)) {
     exit(0);
 }
     draw_style[10] = 5;
-    NumIoLoad("繁华配置");
+    NumIoLoad("config");
     if (draw_style[10] == 5) {
         draw_style[10] = 1;
         启动和平精英();
     }
     if (draw_style[10] == 1) {
-        printf("宝宝！原来你也玩和平精英啊！嘻嘻\n");
+        printf("[+] Target game process ready\n");
     }
     ImGui_init();
     TouchScreenHandle();

@@ -101,7 +101,7 @@ if (DrawIo[50]) {
     const float headScreenY = fanhua.Head.ScreenPos.y;
     static char equipInfo[64]; 
     
-    snprintf(equipInfo, sizeof(equipInfo), "头:%s 甲:%s 包:%s", 
+    snprintf(equipInfo, sizeof(equipInfo), "H:%s V:%s B:%s", 
              tou(敌人头).c_str(), jia(敌人甲).c_str(), bao(敌人包).c_str());
     const float fontSize = 18.0f;
     

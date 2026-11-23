@@ -193,7 +193,7 @@ if (物资[1] && wz.Distance < 350) {
     }
     if (!vehicleName.empty()) {
         char displayText[128];
-        snprintf(displayText, sizeof(displayText), "%s[%d米]", vehicleName.c_str(), (int)wz.Distance);
+        snprintf(displayText, sizeof(displayText), "%s [%dm]", vehicleName.c_str(), (int)wz.Distance);
         const float scale = 0.8f;
         ImVec2 textSize = ImGui::CalcTextSize(displayText);
         textSize.x *= scale;
@@ -220,7 +220,7 @@ if (isSupplyBox && wz.Distance >= 0.5f)
 const int boxState = driver->read<int>(fanhua.Objaddr + 0x270);
 if (boxState == 0) {
 static char boxText[128];
-snprintf(boxText, sizeof(boxText), "[未开启]宝箱[%d米]", static_cast<int>(wz.Distance));
+snprintf(boxText, sizeof(boxText), "[Closed] Chest [%dm]", static_cast<int>(wz.Distance));
 const ImVec2 textSize = ImGui::CalcTextSize(boxText);
 const float padding = 3.0f;
 const float halfTextWidth = textSize.x * 0.5f;

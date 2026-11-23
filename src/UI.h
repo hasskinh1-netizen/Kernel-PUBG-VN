@@ -25,7 +25,7 @@ static const ImColor 圆点颜色[圆点总数] = {
 static const float 圆点半径 = 13.2f;
 static const float 圆点间距 = 9.0f;
 static ImVec2 圆点位置[圆点总数];
-static const char* 错误信息 = "矩阵获取失败，请重启辅助或获取数据试试";
+static const char* 错误信息 = "Matrix read failed. Restart or reload data";
 
 static float errorBgWidth = 0.0f;
 static float errorBgHeight = 0.0f;
@@ -99,15 +99,15 @@ void Draw_Meun() {
                     ImVec2 rect_size(ImGui::GetWindowSize().x - 30, 50);
                     drawList->AddRectFilled(rect_min, ImVec2(rect_min.x + rect_size.x, rect_min.y + rect_size.y), ImGui::GetColorU32(ImVec4(1.0f, 1.0f, 1.0f, 1.0f)), 50.0f);
                     drawList->AddImage(驱动_png, ImVec2(rect_min.x + 5, rect_min.y + 5), ImVec2(rect_min.x + 45, rect_min.y + 45));
-                    drawList->AddText(ImGui::GetFont(), 0.9f * ImGui::GetFontSize(), ImVec2(rect_min.x + 49, rect_min.y + 7), ImGui::GetColorU32(ImVec4(0, 0, 0, 1)), "驱动加载失败");
-                    drawList->AddCircleFilled(ImVec2(rect_min.x + 49 + ImGui::CalcTextSize("驱动加载成功").x, rect_min.y + 27.5), 7.5f, ImGui::GetColorU32(ImVec4(0, 1, 0, 1)));
+                    drawList->AddText(ImGui::GetFont(), 0.9f * ImGui::GetFontSize(), ImVec2(rect_min.x + 49, rect_min.y + 7), ImGui::GetColorU32(ImVec4(0, 0, 0, 1)), "Driver Error");
+                    drawList->AddCircleFilled(ImVec2(rect_min.x + 49 + ImGui::CalcTextSize("Driver Error").x, rect_min.y + 27.5), 7.5f, ImGui::GetColorU32(ImVec4(0, 1, 0, 1)));
                     
                     ImVec2 rect_min2(rect_min.x, rect_min.y + rect_size.y + 10);
                     drawList->AddRectFilled(rect_min2, ImVec2(rect_min2.x + rect_size.x, rect_min2.y + rect_size.y), ImGui::GetColorU32(ImVec4(1.0f, 1.0f, 1.0f, 1.0f)), 50.0f);
                     drawList->AddImage(安卓_png, ImVec2(rect_min2.x + 6, rect_min2.y + 6), ImVec2(rect_min2.x + 46, rect_min2.y + 46));
                     
                     char version_text[256];
-                    snprintf(version_text, sizeof(version_text), "版本: %s", android_version.c_str());
+                    snprintf(version_text, sizeof(version_text), "Android: %s", android_version.c_str());
                     drawList->AddText(ImGui::GetFont(), 0.91f * ImGui::GetFontSize(), ImVec2(rect_min2.x + 50, rect_min2.y + 6), ImGui::GetColorU32(ImVec4(0, 0, 0, 1)), version_text);
 
                     ImGui::PushStyleColor(ImGuiCol_Separator, ImVec4(0,0,0,0));
@@ -122,7 +122,7 @@ void Draw_Meun() {
                     ImGui::Text("");
                     ImGui::Text("");
                     
-                    const char* buttons[] = {"主页声明", "绘制图画", "触摸瞄准", "我的物资", "程序设置"};
+                    const char* buttons[] = {"Home", "Visuals", "Aimbot", "Items", "Settings"};
                     ImTextureID buttons_icons[] = {主页_png, 绘图_png, 瞄准_png, 物资_png, 设置_png};
                     
                     if (标签动画进度 < 1.0f) {
@@ -222,64 +222,64 @@ void Draw_Meun() {
 
 void 主页_1() {
     TouchScroll(true);
-    CenteredText("声明与须知", 1.5f);
+    CenteredText("Notice & Disclaimer", 1.5f);
     float windowHeight = ImGui::GetContentRegionAvail().y;
     ImGui::SetCursorPosY(ImGui::GetCursorPosY() + windowHeight * 0.18f);
     float windowWidth = ImGui::GetContentRegionAvail().x;
     ImGui::PushTextWrapPos(windowWidth);
     float 偏移量 = windowWidth * 0.4f;    
     i(0); ImGui::SetCursorPosX(偏移量); Y();
-    i(1); ImGui::Text("   关于利益问题：\n"); Y();
+    i(1); ImGui::Text("   Pricing & Distribution:\n"); Y();
     i(2); ImGui::SetCursorPosX(偏移量); Y();
-    i(3); ImGui::Text("本产品无任何收费以及内部等\n切勿被骗，开发者不会主动联\n系你，更不会同你索要财务\n"); Y();
+    i(3); ImGui::Text("This software is free and open-source.\nDo not pay third-party resellers.\nDevelopers will never request funds.\n"); Y();
     
     i(4); ImGui::SetCursorPosX(偏移量); Y();
-    i(5); ImGui::Text("   关于使用问题：\n"); Y();
+    i(5); ImGui::Text("   Terms of Usage:\n"); Y();
     i(6); ImGui::SetCursorPosX(偏移量); Y();
-    i(7); ImGui::Text("本作品仅限于交流学习，使用\n者的任何行为与应用开发者无\n关，请在二十四小时内副除本\n应用[下载代表同意本协议]\n"); Y();
+    i(7); ImGui::Text("For educational & research purposes only.\nDevelopers assume no liability for misuse.\nDelete within 24 hours of testing.\n"); Y();
     
     i(8); ImGui::SetCursorPosX(偏移量); Y();
-    i(9); ImGui::Text("   关于隐私问题：\n"); Y();
+    i(9); ImGui::Text("   Privacy Policy:\n"); Y();
     i(10); ImGui::SetCursorPosX(偏移量); Y();
-    i(11); ImGui::Text("本作品不会收集用户约任何隐\n私，包括但不限于账号、IMEI\n更不会存在上传行"); Y();
+    i(11); ImGui::Text("This software does not collect, log,\nor transmit personal identifiers (IMEI, accounts).\n"); Y();
     
     ImGui::PopTextWrapPos();
 }
 
 void 绘制_1() {
-CenteredText("绘图", 1.5f);
+CenteredText("Visuals", 1.5f);
 ImGui::Separator();
     if (ImGui::BeginChild("绘制页面1", ImVec2(0, ImGui::GetContentRegionAvail().y - 10), false, ImGuiWindowFlags_NoBackground)) {
         TouchScroll(true);
-        DrawSectionWithItems("  人物类型绘制", []() {
-            Toggle("  方框", DrawIo[1]);
+        DrawSectionWithItems("  Player ESP", []() {
+            Toggle("  2D Box", DrawIo[1]);
             CustomSeparator();
-            Toggle("  骨骼", DrawIo[3]);
+            Toggle("  Skeleton", DrawIo[3]);
             CustomSeparator();
-            Toggle("  射线", DrawIo[2]);
+            Toggle("  Snapline", DrawIo[2]);
             CustomSeparator();
-            Toggle("  血量", DrawIo[6]);
+            Toggle("  Health Bar", DrawIo[6]);
             CustomSeparator();
-            Toggle("  头甲", DrawIo[50]);
+            Toggle("  Armor/Helmet", DrawIo[50]);
             CustomSeparator();
-            Toggle("  人机", DrawIo[17]);
+            Toggle("  Bot Flag", DrawIo[17]);
             CustomSeparator();
-            Toggle("  手持", DrawIo[10]);
+            Toggle("  Held Weapon", DrawIo[10]);
 
         }, 14);
         ImGui::Text("");
         ImGui::Text("");
-        DrawSectionWithItems("  非人物类型绘制", []() {
-            Toggle("  背敌", DrawIo[8]);
+        DrawSectionWithItems("  Offscreen & Throwables", []() {
+            Toggle("  Behind Enemy Warning", DrawIo[8]);
             CustomSeparator();
-            Toggle("  手雷", DrawIo[14]);
+            Toggle("  Grenade Warning", DrawIo[14]);
             CustomSeparator();
-            Toggle("  忽地", DrawIo[32]);
+            Toggle("  Ignore Downed", DrawIo[32]);
         }, 6);
         
         ImGui::Text("");
         DrawSectionWithItems("", []() {
-            vector<string> triggerOptions = {"分格", "矩形", "传统"};
+            vector<string> triggerOptions = {"Corner", "Box", "Classic"};
             whitecloud(triggerOptions, draw_style[1], 1, 120.0f);
         }, 3);
         ImGui::Text("");
@@ -288,53 +288,53 @@ ImGui::Separator();
 }
 
 void 自瞄_1() {
-    CenteredText("自 瞄", 1.5f);
+    CenteredText("Aimbot", 1.5f);
     ImGui::Separator();
     ImGui::BeginChild("ScrollRegion", ImVec2(0, ImGui::GetContentRegionAvail().y - 10), false);
     {
         TouchScroll(true);
-        DrawSectionWithItems("  自瞄功能", []() {
-            Toggle("  自瞄总开关", DrawIo[20]);
+        DrawSectionWithItems("  Aimbot Settings", []() {
+            Toggle("  Master Switch", DrawIo[20]);
             CustomSeparator();
-            Toggle("  显示自瞄圈", DrawIo[45]);
+            Toggle("  Show FOV Circle", DrawIo[45]);
             CustomSeparator();
-            Toggle("  触摸位置", DrawIo[21]);
+            Toggle("  Touch Position", DrawIo[21]);
             CustomSeparator();
-            Toggle("  动态范围", DrawIo[25]);
+            Toggle("  Dynamic FOV", DrawIo[25]);
             CustomSeparator();
-            Toggle("  预瞄位置", DrawIo[49]);
+            Toggle("  Aim Prediction", DrawIo[49]);
             CustomSeparator();
-            Toggle("  锁定目标", DrawIo[30]);
+            Toggle("  Lock Target", DrawIo[30]);
             CustomSeparator();
-            Toggle("  狙击自瞄", DrawIo[31]);
+            Toggle("  Sniper Aim", DrawIo[31]);
             CustomSeparator();
-            Toggle("  喷子自瞄", DrawIo[41]);
+            Toggle("  Shotgun Aim", DrawIo[41]);
              }, 16);
              ImGui::Text("");
              ImGui::Text("");
-            DrawSectionWithItems("  多种参数", []() {
-            Toggle("  指哪打哪", DrawIo[39]);
+            DrawSectionWithItems("  Parameters", []() {
+            Toggle("  Direct Touch", DrawIo[39]);
             CustomSeparator();
-            Toggle("  被瞄预警", DrawIo[89]);
+            Toggle("  Crosshair Warning", DrawIo[89]);
         }, 4);
         ImGui::Text("");
         DrawSectionWithItems("", []() {
-            vector<string> 自瞄部位 = {"头部", "胸部"}; 
+            vector<string> 自瞄部位 = {"Head", "Chest"}; 
             whitecloud(自瞄部位, NumIo[8], 2, 120.0f);
             }, 3);
             ImGui::Text("");
-            DrawSectionWithItems("  瞄准设置", []() {
-            SliderFloat("预判", &NumIo[22], 0.1f, 5.0f, "%.1f", 5);
-            SliderFloat("范围", &NumIo[3], 10.0f, 350.0f, "%1.f");
-            SliderFloat("平滑", &NumIo[9], 1.0f, 50.0f, "%0.1f");
-            SliderFloat("速度", &NumIo[4], 1.0f, 30.0f, "%0.1f");
-            SliderFloat("触摸", &NumIo[7], 50.01f, 400.0f, "%0.2f");
-            SliderFloat("压枪", &NumIo[14], 0.1f, 5.0f, "%.1f", 5);
+            DrawSectionWithItems("  Aim Adjustments", []() {
+            SliderFloat("Prediction", &NumIo[22], 0.1f, 5.0f, "%.1f", 5);
+            SliderFloat("FOV Radius", &NumIo[3], 10.0f, 350.0f, "%1.f");
+            SliderFloat("Smooth", &NumIo[9], 1.0f, 50.0f, "%0.1f");
+            SliderFloat("Speed", &NumIo[4], 1.0f, 30.0f, "%0.1f");
+            SliderFloat("Touch Range", &NumIo[7], 50.01f, 400.0f, "%0.2f");
+            SliderFloat("Recoil Comp", &NumIo[14], 0.1f, 5.0f, "%.1f", 5);
             }, 13);
             ImGui::Text("");
-            DrawSectionWithItems("特殊设置", []() {
-            SliderFloat("喷子距离限制", &NumIo[33], 0.0f, 50.0f, "%.1f", 5);
-            vector<string> 喷子梓喵 = {"腰射", "开镜"}; 
+            DrawSectionWithItems("  Shotgun Settings", []() {
+            SliderFloat("Shotgun Max Dist", &NumIo[33], 0.0f, 50.0f, "%.1f", 5);
+            vector<string> 喷子梓喵 = {"Hipfire", "ADS"}; 
             whitecloud(喷子梓喵, NumIo[34], 1, 120.0f);
             ImGui::Text("");
             ImGui::Text("");
@@ -343,19 +343,19 @@ void 自瞄_1() {
  ImGui::EndChild();
 }
 void 设置_1() {
-    CenteredText("设置", 1.5f);
+    CenteredText("Settings", 1.5f);
     ImGui::Separator();
     ImGui::BeginChild("ScrollRegion", ImVec2(0, ImGui::GetContentRegionAvail().y - 10), false);
     {
         TouchScroll(true);
-        DrawSectionWithItems("  主要的设置", []() {
+        DrawSectionWithItems("  General Settings", []() {
             bool 当前无后台状态 = (access("/sdcard/无后台", F_OK) == 0);
             bool 当前防录屏状态 = (access("/sdcard/防录屏", F_OK) == 0);
             bool 无后台新状态 = 当前无后台状态;
             bool 防录屏新状态 = 当前防录屏状态;
-            Toggle("  脱离后台运行", 无后台新状态);
+            Toggle("  Run in Background", 无后台新状态);
             CustomSeparator();
-            Toggle("  防止录屏[14-15]", 防录屏新状态);
+            Toggle("  Anti-Screen Record", 防录屏新状态);
             if (无后台新状态) {
                 int fd = open("/sdcard/无后台", O_CREAT | O_RDWR, 0644);
                 close(fd);
@@ -374,13 +374,13 @@ void 设置_1() {
             float buttonWidth = ImGui::GetContentRegionAvail().x * 0.9f;
             float buttonPosX = (ImGui::GetContentRegionAvail().x - buttonWidth) / 2.0f;
             ImGui::SetCursorPosX(buttonPosX);
-            if (button("链接数据", ImVec2(buttonWidth, 63), 12.0)) {
+            if (button("Attach Game Process", ImVec2(buttonWidth, 63), 12.0)) {
                 GetBase();
             }
             CustomSeparator();
             ImGui::SetCursorPosX(buttonPosX);
-            if (button("退出 & 保存配置", ImVec2(buttonWidth, 63), 12.0f)) {
-                NumIoSave("繁华配置");
+            if (button("Save Config & Exit", ImVec2(buttonWidth, 63), 12.0f)) {
+                NumIoSave("config");
                 exit(0);
             }
         }, 5);
@@ -389,35 +389,35 @@ void 设置_1() {
 }
 
 void 物资_1() {
-    CenteredText("物 资", 1.5f);
+    CenteredText("Items", 1.5f);
     ImGui::Separator();
     ImGui::BeginChild("ScrollRegion", ImVec2(0, ImGui::GetContentRegionAvail().y - 10), false);
     {
     TouchScroll(true);
         DrawSectionWithItems("", []() {
-            Toggle("  载具", 物资[1]);
+            Toggle("  Vehicle", 物资[1]);
             CustomSeparator();
-            Toggle("  盒子", 物资[45]);
+            Toggle("  Loot Box", 物资[45]);
             CustomSeparator();
-            Toggle("  宝箱状态", DrawIo[910]);
+            Toggle("  Chest Status", DrawIo[910]);
              }, 6);
              ImGui::Text("");
              DrawSectionWithItems("", []() {
-            Toggle("  宝箱", 物资[18]);
+            Toggle("  Loot Chest", 物资[18]);
             CustomSeparator();
-            Toggle("  信号枪", 物资[3]);
+            Toggle("  Flare Gun", 物资[3]);
             CustomSeparator();
-            Toggle("  空投", 物资[9]);
+            Toggle("  Airdrop", 物资[9]);
                 }, 6);
                 ImGui::Text("");
               DrawSectionWithItems("", []() {  
-            Toggle("  金插", 物资[4]);
+            Toggle("  Keycard", 物资[4]);
             CustomSeparator();
-            Toggle("  BOOS", 物资[69]);
+            Toggle("  Boss", 物资[69]);
             CustomSeparator();
-            Toggle("  超级物资", 物资[60]);
+            Toggle("  Super Loot", 物资[60]);
             CustomSeparator();
-            Toggle("  内鬼显示", 物资[21]);
+            Toggle("  Player Indicator", 物资[21]);
             ImGui::Text("");
         }, 8);
     }
